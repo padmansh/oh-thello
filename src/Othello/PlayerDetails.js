@@ -9,7 +9,7 @@ const arr = [
 const PlayerDetails = ({ coinCount, turn, resetBoard }) => {
   return (
     <>
-      <div className="flex md:flex-col md:mr-4 justify-between w-full md:w-1/4 text-white">
+      <div className="flex md:flex-col md:mr-4 justify-between w-full md:w-44 text-white">
         {arr.map((player, idx) => (
           <div
             key={idx}
