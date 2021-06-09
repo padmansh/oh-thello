@@ -12,7 +12,7 @@ const rotateY = plugin(function ({ addUtilities }) {
 });
 
 module.exports = {
-  purge: [],
+  purge: ["./Othello/**/*.{js,ts,jsx,tsx}"],
   presets: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
