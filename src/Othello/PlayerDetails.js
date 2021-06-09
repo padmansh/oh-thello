@@ -9,30 +9,36 @@ const arr = [
 const PlayerDetails = ({ coinCount, turn, resetBoard }) => {
   return (
     <>
-      {arr.map((player, idx) => (
-        <div
-          key={idx}
-          className={`flex p-2 rounded-sm mb-4 ${
-            (turn === "w" && player.name === "White") ||
-            (turn === "b" && player.name === "Black")
-              ? "bg-board_green_dark"
-              : "bg-button_black"
-          }`}
+      <div className="flex md:flex-col md:mr-4 justify-between w-full md:w-1/4 text-white">
+        {arr.map((player, idx) => (
+          <div
+            key={idx}
+            className={`flex p-2 rounded-sm mb-4 flex-grow ${
+              (turn === "w" && player.name === "White") ||
+              (turn === "b" && player.name === "Black")
+                ? "bg-board_green_dark"
+                : "bg-button_black"
+            } ${player.name === "White" ? "mr-2 md:mr-0" : "ml-2 md:ml-0"}`}
+          >
+            <div className="p-4 flex items-center md:flex-remove">
+              <Coin color={player.color} />
+            </div>
+            <div className="p-2 px-4  flex flex-col justify-center ">
+              <p className="">{player.name}</p>
+              <p className="">
+                {player.color === "white" ? coinCount.white : coinCount.black}
+              </p>
+            </div>
+          </div>
+        ))}
+
+        <button
+          className="bg-button_black rounded-sm py-1 hidden md:block"
+          onClick={resetBoard}
         >
-          <div className="p-2">
-            <Coin color={player.color} />
-          </div>
-          <div className="p-2 flex flex-col ">
-            <p className="">{player.name}</p>
-            <p className="">
-              {player.color === "white" ? coinCount.white : coinCount.black}
-            </p>
-          </div>
-        </div>
-      ))}
-      <button className="bg-button_black rounded-sm py-1" onClick={resetBoard}>
-        Reset
-      </button>
+          Reset
+        </button>
+      </div>
     </>
   );
 };

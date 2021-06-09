@@ -282,15 +282,13 @@ const Board = () => {
 
   return (
     <>
-      <div className="p-4 flex flex-col justify-center items-center h-screen bg-dark">
-        <div className="p-2 flex items-center justify-center">
-          <div className="px-4 text-white flex flex-col">
-            <PlayerDetails
-              coinCount={coinCount}
-              turn={turn}
-              resetBoard={resetBoard}
-            />
-          </div>
+      <div className="p-2 sm:p-4 flex flex-col justify-center items-center h-screen bg-dark">
+        <div className="p-0 sm:p-2 flex flex-col md:flex-row items-center justify-center">
+          <PlayerDetails
+            coinCount={coinCount}
+            turn={turn}
+            resetBoard={resetBoard}
+          />
           <div className="grid grid-cols-8">
             {squares.map((square) =>
               square.map((tile) => (
@@ -313,6 +311,12 @@ const Board = () => {
               ))
             )}
           </div>
+          <button
+            className="bg-button_black rounded-sm py-1 md:hidden text-white mt-4 w-full"
+            onClick={resetBoard}
+          >
+            Reset
+          </button>
         </div>
       </div>
     </>
