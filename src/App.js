@@ -1,7 +1,8 @@
 import "./assets/main.css";
+import Board from "./Othello/Board";
 
 const App = () => {
-  return <div>Hello</div>;
+  return <Board />;
 };
 
 export default App;
