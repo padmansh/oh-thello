@@ -98,6 +98,7 @@ const Board = ({ match }) => {
     setTurn("w");
     setCoinCount({ white: 2, black: 2 });
     setFilled(["33", "44", "34", "43"]);
+    setAllPossibleMoves([]);
   };
 
   const updateCoinCount = () => {
