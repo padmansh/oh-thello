@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Coin from "./Coin";
+import PreCoin from "./PreCoin";
 import PlayerDetails from "./PlayerDetails";
 
 let tiles = new Array(8);
@@ -20,11 +21,59 @@ for (let i = 0; i < 8; i++) {
   }
 }
 
-const Board = () => {
+const Board = ({ match }) => {
+  const { mode } = match.params;
   const [squares, setSquares] = useState(tiles);
   const [turn, setTurn] = useState("w");
+  const [hint, setHint] = useState(false);
+  const [allPossibleMoves, setAllPossibleMoves] = useState([]);
   const [filled, setFilled] = useState(["33", "44", "34", "43"]);
   const [coinCount, setCoinCount] = useState({ white: 2, black: 2 });
+
+  useEffect(() => {
+    let { allMoves, compMove } = possibleMoves();
+    setAllPossibleMoves(allMoves);
+
+    if (mode === "computer_player" && turn === "b") {
+      compMove &&
+        setTimeout(() => {
+          handleTurn(compMove);
+        }, 1500);
+    }
+    //eslint-disable-next-line
+  }, [turn]);
+
+  const possibleMoves = () => {
+    let allMoves = [];
+    let flips = [];
+    let max = 1;
+    let bestMove = [];
+
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        if (!filled.includes(squares[i][j].id)) {
+          flips = getFlippingCoins(squares[i][j]);
+          if (flips.length > 0) {
+            allMoves.push(squares[i][j].id);
+          }
+          if (mode === "computer_player") {
+            if (flips.length > max) {
+              max = flips.length;
+              bestMove = [];
+              bestMove.push(squares[i][j]);
+            }
+            if (flips.length === max) {
+              bestMove.push(squares[i][j]);
+            }
+          }
+        }
+      }
+    }
+
+    const computerMove = bestMove[Math.floor(Math.random() * bestMove.length)];
+
+    return { allMoves: allMoves, compMove: computerMove };
+  };
 
   const resetBoard = () => {
     setSquares(
@@ -282,42 +331,63 @@ const Board = () => {
 
   return (
     <>
-      <div className="p-2 sm:p-4 flex flex-col justify-center items-center h-screen bg-dark">
-        <div className="p-0 sm:p-2 flex flex-col md:flex-row items-center justify-center">
-          <PlayerDetails
-            coinCount={coinCount}
-            turn={turn}
-            resetBoard={resetBoard}
-          />
-          <div className="grid grid-cols-8">
-            {squares.map((square) =>
-              square.map((tile) => (
-                <div
-                  onClick={() => handleTurn(tile)}
-                  key={tile.id}
-                  className={`h-11 w-11 sm:h-16 sm:w-16 bg-board_green hover:bg-board_green_dark flex justify-center items-center p-0.5 border-dark rounded-sm ${
-                    filled.includes(tile.id)
-                      ? "cursor-not-allowed"
-                      : "cursor-pointer"
-                  } border`}
-                >
-                  {tile.type !== "n" &&
-                    (tile.type === "b" ? (
-                      <Coin color="dark" shadow />
-                    ) : (
-                      <Coin color="white" shadow />
-                    ))}
-                </div>
-              ))
-            )}
+      <div className="p-2 sm:p-4 flex flex-col justify-center items-center h-screen">
+        {mode === "multi_player" ? (
+          <p className="text-white text-4xl">Comming Soon !</p>
+        ) : (
+          <div className="p-0 sm:p-2 flex flex-col md:flex-row items-center justify-center">
+            <PlayerDetails
+              coinCount={coinCount}
+              turn={turn}
+              resetBoard={resetBoard}
+              hint={hint}
+              setHint={setHint}
+            />
+            <div className="grid grid-cols-8">
+              {squares.map((square) =>
+                square.map((tile) => (
+                  <div
+                    onClick={
+                      mode === "computer_player"
+                        ? turn === "w"
+                          ? () => handleTurn(tile)
+                          : ""
+                        : () => handleTurn(tile)
+                    }
+                    key={tile.id}
+                    className={`h-11 w-11 sm:h-16 sm:w-16 bg-board_green hover:bg-board_green_dark flex justify-center items-center p-0.5 border-dark rounded-sm ${
+                      filled.includes(tile.id)
+                        ? "cursor-not-allowed"
+                        : "cursor-pointer"
+                    } border`}
+                  >
+                    {tile.type !== "n" &&
+                      (tile.type === "b" ? (
+                        <Coin color="dark" shadow />
+                      ) : (
+                        <Coin color="white" shadow />
+                      ))}
+                    {hint && allPossibleMoves.includes(tile.id) && <PreCoin />}
+                  </div>
+                ))
+              )}
+            </div>
+            <button
+              className={` rounded-sm py-1 md:hidden text-white mt-4 w-full hover:bg-board_green_dark ${
+                hint ? "bg-board_green_dark" : "bg-button_black"
+              }`}
+              onClick={() => setHint(!hint)}
+            >
+              {`Hint : ${hint ? "On" : "Off"}`}
+            </button>
+            <button
+              className="bg-button_black rounded-sm py-1 md:hidden text-white mt-4 w-full hover:bg-board_green_dark"
+              onClick={resetBoard}
+            >
+              Reset
+            </button>
           </div>
-          <button
-            className="bg-button_black rounded-sm py-1 md:hidden text-white mt-4 w-full"
-            onClick={resetBoard}
-          >
-            Reset
-          </button>
-        </div>
+        )}
       </div>
     </>
   );
