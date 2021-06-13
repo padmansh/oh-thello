@@ -16,6 +16,12 @@ module.exports = {
   presets: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    extend: {
+      inset: {
+        22.6: "22.6rem",
+        2.15: "2.15rem",
+      },
+    },
     screens: {
       sm: "640px",
       md: "768px",
@@ -78,6 +84,11 @@ module.exports = {
       72: "18rem",
       80: "20rem",
       96: "24rem",
+      "5/12": "41.666667%",
+      "4/12": "33.333333%",
+      "3/12": "25%",
+      "2/12": "16.666667%",
+      "1/12": "8.333333%",
     },
     animation: {
       none: "none",

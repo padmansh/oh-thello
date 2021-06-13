@@ -6,7 +6,15 @@ const arr = [
   { color: "dark", name: "Black", score: "4" },
 ];
 
-const PlayerDetails = ({ coinCount, turn, resetBoard, hint, setHint }) => {
+const PlayerDetails = ({
+  coinCount,
+  turn,
+  resetBoard,
+  ExitGame,
+  hint,
+  setHint,
+  mode,
+}) => {
   return (
     <>
       <div className="flex md:flex-col md:mr-4 justify-between w-full md:w-44 text-white">
@@ -41,10 +49,19 @@ const PlayerDetails = ({ coinCount, turn, resetBoard, hint, setHint }) => {
         </button>
 
         <button
+          disabled={mode === "computer_player" && turn === "b" ? true : false}
           className="bg-button_black rounded-sm py-1 hidden md:block hover:bg-board_green_dark"
           onClick={resetBoard}
         >
           Reset
+        </button>
+
+        <button
+          disabled={mode === "computer_player" && turn === "b" ? true : false}
+          className="bg-button_black rounded-sm py-1 hidden md:block hover:bg-board_green_dark mt-4"
+          onClick={ExitGame}
+        >
+          Exit
         </button>
       </div>
     </>

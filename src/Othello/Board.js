@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import Coin from "./Coin";
 import PreCoin from "./PreCoin";
 import PlayerDetails from "./PlayerDetails";
+import Oops from "./OopsPrompt";
+import { useHistory } from "react-router-dom";
+import GameOver from "./GameOverPrompt";
 
 let tiles = new Array(8);
 
@@ -22,6 +25,7 @@ for (let i = 0; i < 8; i++) {
 }
 
 const Board = ({ match }) => {
+  const history = useHistory();
   const { mode } = match.params;
   const [squares, setSquares] = useState(tiles);
   const [turn, setTurn] = useState("w");
@@ -29,19 +33,50 @@ const Board = ({ match }) => {
   const [allPossibleMoves, setAllPossibleMoves] = useState([]);
   const [filled, setFilled] = useState(["33", "44", "34", "43"]);
   const [coinCount, setCoinCount] = useState({ white: 2, black: 2 });
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     let { allMoves, compMove } = possibleMoves();
     setAllPossibleMoves(allMoves);
 
-    if (mode === "computer_player" && turn === "b") {
-      compMove &&
-        setTimeout(() => {
-          handleTurn(compMove);
-        }, 1500);
+    if (allMoves.length) {
+      if (mode === "computer_player" && turn === "b") {
+        compMove &&
+          setTimeout(() => {
+            handleTurn(compMove);
+          }, 1000);
+      }
+    } else {
+      if (
+        coinCount.white === 0 ||
+        coinCount.black === 0 ||
+        filled.length === 64
+      ) {
+        setGameOver(true);
+      } else {
+        setShowPrompt(true);
+      }
     }
+
     //eslint-disable-next-line
   }, [turn]);
+
+  const PassChance = () => {
+    setTurn(turn === "b" ? "w" : "b");
+    setShowPrompt(false);
+  };
+
+  const ExitGame = () => {
+    resetBoard();
+    history.push("/");
+    setShowPrompt(false);
+  };
+
+  const PlayAgain = () => {
+    resetBoard();
+    setGameOver(false);
+  };
 
   const possibleMoves = () => {
     let allMoves = [];
@@ -98,7 +133,8 @@ const Board = ({ match }) => {
     setTurn("w");
     setCoinCount({ white: 2, black: 2 });
     setFilled(["33", "44", "34", "43"]);
-    setAllPossibleMoves([]);
+    // let { allMoves } = possibleMoves();
+    // setAllPossibleMoves(allMoves);
   };
 
   const updateCoinCount = () => {
@@ -299,6 +335,7 @@ const Board = ({ match }) => {
   };
 
   const handleTurn = (tile) => {
+    console.time("time");
     let arr;
 
     if (!filled.includes(tile.id)) {
@@ -328,6 +365,7 @@ const Board = ({ match }) => {
         }
       }
     }
+    console.timeEnd("time");
   };
 
   return (
@@ -341,20 +379,20 @@ const Board = ({ match }) => {
               coinCount={coinCount}
               turn={turn}
               resetBoard={resetBoard}
+              ExitGame={ExitGame}
               hint={hint}
               setHint={setHint}
+              mode={mode}
             />
             <div className="grid grid-cols-8">
               {squares.map((square) =>
                 square.map((tile) => (
                   <div
-                    onClick={
-                      mode === "computer_player"
-                        ? turn === "w"
-                          ? () => handleTurn(tile)
-                          : ""
-                        : () => handleTurn(tile)
-                    }
+                    onClick={() => {
+                      if (!(mode === "computer_player" && turn === "b")) {
+                        handleTurn(tile);
+                      }
+                    }}
                     key={tile.id}
                     className={`h-11 w-11 sm:h-16 sm:w-16 bg-board_green hover:bg-board_green_dark flex justify-center items-center p-0.5 border-dark rounded-sm ${
                       filled.includes(tile.id)
@@ -382,14 +420,40 @@ const Board = ({ match }) => {
               {`Hint : ${hint ? "On" : "Off"}`}
             </button>
             <button
+              disabled={
+                mode === "computer_player" && turn === "b" ? true : false
+              }
               className="bg-button_black rounded-sm py-1 md:hidden text-white mt-4 w-full hover:bg-board_green_dark"
               onClick={resetBoard}
             >
               Reset
             </button>
+            <button
+              disabled={
+                mode === "computer_player" && turn === "b" ? true : false
+              }
+              className="bg-button_black rounded-sm py-1 md:hidden text-white mt-4 w-full hover:bg-board_green_dark"
+              onClick={ExitGame}
+            >
+              Exit
+            </button>
           </div>
         )}
       </div>
+      <Oops
+        ExitGame={ExitGame}
+        PassChance={PassChance}
+        showPrompt={showPrompt}
+        mode={mode}
+        turn={turn}
+      />
+      <GameOver
+        ExitGame={ExitGame}
+        PlayAgain={PlayAgain}
+        showPrompt={gameOver}
+        coinCount={coinCount}
+        mode={mode}
+      />
     </>
   );
 };
