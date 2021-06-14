@@ -37,6 +37,11 @@ const Board = ({ match }) => {
   const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
+    resetBoard();
+    //eslint-disable-next-line
+  }, [history]);
+
+  useEffect(() => {
     let { allMoves, compMove } = possibleMoves();
     setAllPossibleMoves(allMoves);
 
@@ -133,8 +138,7 @@ const Board = ({ match }) => {
     setTurn("w");
     setCoinCount({ white: 2, black: 2 });
     setFilled(["33", "44", "34", "43"]);
-    // let { allMoves } = possibleMoves();
-    // setAllPossibleMoves(allMoves);
+    setAllPossibleMoves(["24", "35", "42", "53"]);
   };
 
   const updateCoinCount = () => {
