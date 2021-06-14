@@ -23,7 +23,7 @@ const instructions = [
 const Instructions = () => {
   return (
     <>
-      <div className="mx-4 py-4 px-4 sm:px-24 md:px-40 lg:px-64 xl:px-80 h-screen ">
+      <div className="ml-4 mr-2 py-4 px-4 sm:px-24 md:px-40 lg:px-64 xl:px-80 h-screen ">
         <p className="text-white text-4xl text-center mt-5 mb-6">
           Instructions
         </p>
