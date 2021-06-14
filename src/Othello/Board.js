@@ -339,7 +339,6 @@ const Board = ({ match }) => {
   };
 
   const handleTurn = (tile) => {
-    console.time("time");
     let arr;
 
     if (!filled.includes(tile.id)) {
@@ -369,7 +368,6 @@ const Board = ({ match }) => {
         }
       }
     }
-    console.timeEnd("time");
   };
 
   return (
