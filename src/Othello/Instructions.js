@@ -2,7 +2,6 @@ import React from "react";
 
 const instructions = [
   { text: "In every mode, White is the first moving piece followed by Black." },
-  { text: "In every mode, White is the first moving piece followed by Black." },
   {
     text: "You have to place your pieces on the board adjacant to opponent's pieces so that the opponent's piece or a row of opponent's pieces is flanked by the new piece (you just placed) and another piece of your own (that you placed in previous turns).",
   },
