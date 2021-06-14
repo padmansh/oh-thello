@@ -74,8 +74,8 @@ const Board = ({ match }) => {
 
   const ExitGame = () => {
     resetBoard();
-    history.push("/");
     setShowPrompt(false);
+    history.replace("/");
   };
 
   const PlayAgain = () => {
