@@ -15,7 +15,7 @@ const instructions = [
     text: "Hints provide you with all possible places where you can place your piece for difficult situations.",
   },
   {
-    text: "You can reset the board anytime, If you feel losing.",
+    text: "You can reset the board anytime, If it becomes too hard.",
   },
 ];
 
